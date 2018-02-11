@@ -10,8 +10,13 @@ import (
 
 func usage() {
 	fmt.Println(`
+<<<<<<< HEAD
 Usage: font [features|info|metrics|scrub|stats] font.[otf,ttf,woff,woff2] ...
+=======
+Usage: font [cmap|features|info|metrics|scrub|stats] font.[otf,ttf,woff]
+>>>>>>> 956c6b9 (Add initial support for parsing the cmap table.)
 
+cmap: prints out Character To Glyph mappings
 features: prints the gpos/gsub tables (contains font features)
 info: prints the name table (contains metadata)
 metrics: prints the hhea table (contains font metrics)
@@ -32,6 +37,7 @@ func main() {
 		"stats":    Stats,
 		"metrics":  Metrics,
 		"features": Features,
+		"cmap":     Cmap,
 	}
 	if _, found := cmds[command]; !found {
 		usage()
