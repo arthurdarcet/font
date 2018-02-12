@@ -8,6 +8,15 @@ import (
 	"testing"
 )
 
+var testFiles = []string{
+	"Roboto-BoldItalic.ttf",
+	"Raleway-v4020-Regular.otf",
+	"open-sans-v15-latin-regular.woff",
+	"NotoColorEmoji.ttf",
+	"NotoSansCJKjp-Regular.otf",
+	// "NotoSerifCJK-Regular.ttc", // TTC files not supported, yet.
+}
+
 // TestSmokeTest very simply checks we can parse, and write the sample fonts
 // without error.
 // TODO We should check what is returned is valid.
