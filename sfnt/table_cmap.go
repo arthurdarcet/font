@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
-	"io/ioutil"
 )
 
 // MissingGlyph is the missing glyph value.
@@ -15,6 +14,7 @@ const MissingGlyph = 0
 //
 // See https://www.microsoft.com/typography/otspec/cmap.htm
 type TableCmap struct {
+	baseTable
 	bytes []byte
 
 	header    cmapHeader
@@ -206,7 +206,7 @@ func parseCmapFormat4(r io.Reader) (*cmapFormat4, error) {
 
 	for i := 1; i < len(subtable.endCode); i++ {
 		if subtable.endCode[i-1] >= subtable.endCode[i] {
-			return nil, fmt.Errorf("endCode is expected to be sorted: %s", subtable.endCode)
+			return nil, fmt.Errorf("endCode is expected to be sorted: %v", subtable.endCode)
 		}
 	}
 
@@ -437,17 +437,13 @@ func validCmapFormat(t *EncodingSubtable) error {
 }
 
 // parseTableCmap parses a Character To Glyph Index Mapping Table used by 'cmap'.
-func parseTableCmap(r io.Reader) (Table, error) {
-	buf, err := ioutil.ReadAll(r)
-	if err != nil {
-		return nil, err
-	}
-
+func parseTableCmap(tag Tag, buf []byte) (Table, error) {
 	t := &TableCmap{
-		bytes: buf,
+		baseTable: baseTable(tag),
+		bytes:     buf,
 	}
 
-	r = bytes.NewReader(t.bytes)
+	r := bytes.NewReader(t.bytes)
 	if err := binary.Read(r, binary.BigEndian, &t.header); err != nil {
 		return nil, fmt.Errorf("reading cmap header: %s", err)
 	}
